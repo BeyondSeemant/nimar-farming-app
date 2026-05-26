@@ -1,0 +1,91 @@
+from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from PIL import Image
+import io
+import torch
+import torchvision.transforms as transforms
+import torch.nn as nn
+import timm
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Device
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# Load model
+model = timm.create_model("resnet18", pretrained=False)
+model.fc = nn.Linear(model.fc.in_features, 38)
+
+# Load trained weights
+model.load_state_dict(torch.load("plant_disease_model.pth", map_location=device))
+model = model.to(device)
+model.eval()
+
+# Image transform
+transform = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize(
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225]
+    )
+])
+
+# FULL 38 CLASS LABELS (CORRECT ORDER)
+classes = [
+    "Apple___Apple_scab","Apple___Black_rot","Apple___Cedar_apple_rust","Apple___healthy",
+    "Blueberry___healthy",
+    "Cherry_(including_sour)___Powdery_mildew","Cherry_(including_sour)___healthy",
+    "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot","Corn_(maize)___Common_rust_",
+    "Corn_(maize)___Northern_Leaf_Blight","Corn_(maize)___healthy",
+    "Grape___Black_rot","Grape___Esca_(Black_Measles)","Grape___Leaf_blight_(Isariopsis_Leaf_Spot)","Grape___healthy",
+    "Orange___Haunglongbing_(Citrus_greening)",
+    "Peach___Bacterial_spot","Peach___healthy",
+    "Pepper,_bell___Bacterial_spot","Pepper,_bell___healthy",
+    "Potato___Early_blight","Potato___Late_blight","Potato___healthy",
+    "Raspberry___healthy",
+    "Soybean___healthy",
+    "Squash___Powdery_mildew",
+    "Strawberry___Leaf_scorch","Strawberry___healthy",
+    "Tomato___Bacterial_spot","Tomato___Early_blight","Tomato___Late_blight",
+    "Tomato___Leaf_Mold","Tomato___Septoria_leaf_spot",
+    "Tomato___Spider_mites Two-spotted_spider_mite","Tomato___Target_Spot",
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus","Tomato___Tomato_mosaic_virus","Tomato___healthy"
+]
+
+@app.post("/predict")
+async def predict(file: UploadFile = File(...)):
+    contents = await file.read()
+    image = Image.open(io.BytesIO(contents)).convert("RGB")
+
+    input_tensor = transform(image).unsqueeze(0).to(device)
+
+    with torch.no_grad():
+        outputs = model(input_tensor)
+        probabilities = torch.nn.functional.softmax(outputs[0], dim=0)
+
+    confidence, predicted = torch.max(probabilities, 0)
+
+    class_name = classes[predicted.item()]
+
+    # Clean label
+    parts = class_name.split("___")
+    crop = parts[0].replace("_", " ")
+    disease = parts[1].replace("_", " ") if len(parts) > 1 else "Healthy"
+
+    return {
+        "crop": crop,
+        "disease": disease,
+        "confidence": f"{confidence.item()*100:.2f}%",
+        "severity": "High" if confidence.item() > 0.8 else "Medium",
+        "solution": "Apply recommended fungicide / remove infected leaves",
+        "precautions": "Regular monitoring, proper irrigation, avoid overcrowding"
+    }

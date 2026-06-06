@@ -15,37 +15,45 @@ const Schemes = () => {
   const [result, setResult] = useState([]);
   const [rejected, setRejected] = useState([]);
   const [checked, setChecked] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const isFormValid = form.land && form.income && form.category && form.state;
 
   const schemes = [
     {
       name: "PM-KISAN",
       rule: (f) => Number(f.land) <= 2 && Number(f.income) <= 200000,
       desc: "₹6000/year direct income support",
+      reason: "Your land and income match PM-KISAN criteria",
       link: "https://pmkisan.gov.in/",
     },
     {
       name: "Kisan Credit Card",
       rule: (f) => Number(f.land) > 0,
       desc: "Loan up to ₹3 lakh at low interest",
+      reason: "You own agricultural land",
       link: "https://www.nabard.org/",
     },
     {
       name: "PM Fasal Bima Yojana",
       rule: (f) => Number(f.land) > 0,
       desc: "Crop insurance against natural disasters",
+      reason: "You are a farmer with land",
       link: "https://pmfby.gov.in/",
     },
     {
       name: "MP Krishi Anudan Yojana",
       rule: (f) => f.state === "MP",
       desc: "Subsidy on farming equipment in MP",
+      reason: "You selected Madhya Pradesh",
       link: "https://dbt.mpdage.org/",
     },
     {
       name: "SC/ST Farmer Subsidy",
       rule: (f) => f.category === "SC/ST",
       desc: "Extra subsidy benefits",
+      reason: "You belong to SC/ST category",
       link: "https://agriculture.gov.in/",
+      
     },
   ];
 
@@ -54,11 +62,15 @@ const Schemes = () => {
     const notEligible = [];
     schemes.forEach((s) => {
       if (s.rule(form)) eligible.push(s);
-      else notEligible.push({ ...s, reason: "Not eligible based on your input" });
+      else notEligible.push({ ...s, reason:"Not eligible based on your input"});
     });
     setResult(eligible);
     setRejected(notEligible);
     setChecked(true);
+
+    setTimeout(() => {
+     document.querySelector(".results-section")?.scrollIntoView({ behavior: "smooth" });  
+    }, 100);
   };
 
   const topSchemes = [
@@ -212,9 +224,10 @@ const Schemes = () => {
         /* HERO LAYOUT */
         .hero {
           display: grid;
-          grid-template-columns: 520px 1fr;
+          grid-template-columns: minmax(0, 520px) 1fr;
           min-height: 580px;
           position: relative;
+          overflow: hidden;
         }
 
         /* LEFT PANEL */
@@ -506,6 +519,12 @@ const Schemes = () => {
           font-size: 14px;
           padding: 20px 0;
         }
+          * {
+          max-width: 100%;
+        }
+          body {
+          background-color: #03111f !important;
+        }
       `}</style>
 
       <div className="schemes-root">
@@ -602,9 +621,33 @@ const Schemes = () => {
                       </select>
                       <div className="field-arrow">▾</div>
                     </div>
+                    
+                    {/* State */}
+                    <div className="field-row">
+                      <div className="field-icon">📍</div>
+                      <div className="field-label">State</div>
+                      <select className="field-select"
+                        onChange={(e) => setForm({ ...form, state: e.target.value })}                      >
+                        <option value="">Select state</option>
+                        <option value="MP">Madhya Pradesh</option>
+                        
+                      </select>
+                      <div className="field-arrow">▾</div>
+                    </div>
 
-                    <button className="find-btn" onClick={checkEligibility}>
-                      🔍 Find My Suitable Schemes
+                    <button
+                      className="find-btn"
+                      onClick={() => {
+                        setLoading(true);
+                        setTimeout(() => {
+                          checkEligibility();
+                          setLoading(false);
+                        }, 600);
+                      }}
+                      disabled={!isFormValid}
+                      style={{ opacity: isFormValid ? 1 : 0.5, cursor: "" }}
+                    >                    
+                      {loading ? "Checking..." : "🔍 Find My Suitable Schemes"}
                     </button>
                     <div className="secure-note">
                       🔒 Your information is secure and confidential
@@ -654,13 +697,32 @@ const Schemes = () => {
                   <div className="result-card" key={i}>
                     <h3>{s.name}</h3>
                     <p>{s.desc}</p>
+                    <p style={{ fontSize: "11px", color: "#00e676" }}>
+                      {s.reason}
+                    </p>
                     <a className="apply-link" href={s.link} target="_blank" rel="noreferrer">Apply Now →</a>
                   </div>
                 ))}
               </div>
             )}
+            <br></br>
+            <h2 className="results-title">
+            <span>Not Eligible</span> (Why?)         
+             </h2>         
+             <div className="results-grid">         
+             {rejected.map((s, i) => (         
+               <div className="result-card" key={i} style={{ opacity: 0.6 }}>         
+                 <h3>{s.name}</h3>        
+                 <p>{s.reason}</p>         
+               </div>
+              ))}         
+             </div>
+
           </div>
+
+
         )}
+           
       </div>
     </>
   );

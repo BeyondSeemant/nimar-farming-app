@@ -1,5 +1,6 @@
-import React from "react";
+
 import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 
 
 
@@ -17,13 +18,15 @@ const Home = () => {
     "PM-KUSUM Yojana",
   ];
 
+  const [loading, setLoading] = useState(false);
+
   const features = [
     { icon: "🎯", title: "Personalized Results", sub: "Get schemes that match your profile" },
     { icon: "🔐", title: "100% Secure", sub: "Your data is protected and confidential" },
     { icon: "⏱", title: "Up-to-date Information", sub: "We provide the latest scheme information" },
     { icon: "👨‍🌾", title: "Farmer First", sub: "Designed to support our farmers" },
   ];
-
+ 
   const popular = [
     {
       name: "PM Kisan Samman Nidhi",
@@ -65,11 +68,11 @@ const Home = () => {
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500&display=swap');
 
         body {
-          margin: 0;
-          font-family: 'Inter', sans-serif;
-          background: #020d18;
-          color: white;
-        }
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: #03111f;
+            color: white;
+             }          
 
         .page {
           background:
@@ -335,6 +338,12 @@ const Home = () => {
             grid-template-columns: 1fr 1fr;
           }
         }
+          * {
+          max-width: 100%;
+           }
+          body {
+          background-color: #03111f !important;
+        }
       `}</style>
 
       <div className="page">
@@ -375,13 +384,21 @@ const Home = () => {
               </p>
 
               <div className="buttons">
-              <button 
-               className="primary"
-               onClick={() => navigate("/schemes")}
+              <button
+                className="primary"
+                onClick={() => {
+                  setLoading(true);
+              
+                  setTimeout(() => {
+                    navigate("/schemes");
+                    setLoading(false);
+                  }, 600);
+                }}
+                disabled={loading}
+                style={{ opacity: loading ? 0.7 : 1}}
               >
-              Check Scheme Eligibility
+                {loading ? "Loading..." : "Check Scheme Eligibility"}
               </button>
-
           
               </div>
 

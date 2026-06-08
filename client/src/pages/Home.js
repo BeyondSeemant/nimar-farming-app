@@ -1,64 +1,55 @@
-
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
+import translations from "../translations";
 
-
-
+const farmerImg = "/farmer.jpg";
 const Home = () => {
   const navigate = useNavigate();
+  const [lang, setLang] = useState("en");
+const t = translations[lang]; 
 
   const schemes = [
-    "Top Schemes",
-    "PM Kisan Samman Nidhi",
-    "PM Fasal Bima Yojana",
-    "Kisan Credit Card",
-    "PM Krishi Sinchayee Yojana",
-    "Soil Health Card Scheme",
-    "National Agriculture Market",
-    "PM-KUSUM Yojana",
+    t.topSchemes,
+    t.scheme1Name,
+    t.scheme2Name,  
+    t.scheme3Name,  
+    t.scheme4Name,
+    t.scheme5Name,  
+    t.scheme6Name,
   ];
 
   const [loading, setLoading] = useState(false);
 
-  const features = [
-    { icon: "🎯", title: "Personalized Results", sub: "Get schemes that match your profile" },
-    { icon: "🔐", title: "100% Secure", sub: "Your data is protected and confidential" },
-    { icon: "⏱", title: "Up-to-date Information", sub: "We provide the latest scheme information" },
-    { icon: "👨‍🌾", title: "Farmer First", sub: "Designed to support our farmers" },
-  ];
- 
   const popular = [
     {
-      name: "PM Kisan Samman Nidhi",
-      link: "https://pmkisan.gov.in/",  
+      name: t.scheme1Name,
+      desc: t.scheme1Desc,
+      link: "https://pmkisan.gov.in/",
     },
     {
-      name: "PM Fasal Bima Yojana",
+      name: t.scheme2Name,
+      desc: t.scheme2Desc,
       link: "https://pmfby.gov.in/",
     },
-    { 
-      name: "Kisan Credit Card",
+    {
+      name: t.scheme3Name,
+      desc: t.scheme3Desc,
       link: "https://www.nabard.org/",
     },
     {
-       name: "PM Krishi Sinchayee Yojana",
-       link: "#",
-  
+      name: t.scheme4Name,
+      desc: t.scheme4Desc,
+      link: "#",
     },
     {
-       name: "Soil Health Card",
-       link: "https://soilhealth.dac.gov.in",
-  
-    },
-    {
-      name: "e-NAM",
+      name: t.scheme5Name,
+      desc: t.scheme5Desc,
       link: "https://www.enam.gov.in",
-  
     },
     {
-      name: "PM-KUSUM", 
+      name: t.scheme6Name,
+      desc: t.scheme6Desc,
       link: "https://pmkusum.mnre.gov.in",
-  
     },
   ];
 
@@ -67,12 +58,18 @@ const Home = () => {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500&display=swap');
 
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: #03111f;
-            color: white;
-             }          
+        body, html {
+          margin: 0;
+          padding: 0;
+          font-family: 'Inter', sans-serif;
+          background: #03111f;
+          color: white;
+        }
+
+        .schemes-root {
+          background: #03111f;
+          min-height: 100vh;
+        }
 
         .page {
           background:
@@ -83,29 +80,108 @@ const Home = () => {
 
         .top-nav {
           display: flex;
-          gap: 20px;
-          padding: 14px 24px;
-          overflow-x: auto;
-          border-bottom: 1px solid rgba(255,255,255,0.08);
+          align-items: center;
+          gap: 6px;
+          padding: 0 28px;
+          height: 52px;
+          background: rgba(255,255,255,0.05);
+          border-bottom: 1px solid rgba(255,255,255,0.07);
+          overflow: hidden;
         }
 
-        .nav-item {
-          opacity: 0.7;
-          font-size: 14px;
-          white-space: nowrap;
-        }
-
-        .nav-item.active {
+        .top-nav-label {
+          display: flex;
+          align-items: center;
+          gap: 8px;
           color: #00e676;
+          font-size: 13px;
           font-weight: 600;
+          white-space: nowrap;
+          padding-right: 14px;
+          border-right: 1px solid rgba(255,255,255,0.15);
+          margin-right: 8px;
         }
+        .top-nav-label svg { width: 16px; height: 16px; }
+        .top-nav-items {
+          display: flex;
+          gap: 0;
+          overflow: hidden;
+          flex: 1;
+        }
+        .top-nav-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 13px;
+          color: rgba(255,255,255,0.75);
+          white-space: nowrap;
+          padding: 0 16px;
+          cursor: pointer;
+          transition: color 0.2s;
+        }
+        .top-nav-item:hover { color: white; }
+        .top-nav-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: #00e676;
+          opacity: 0.6;
+        }
+        .top-nav-arrow {
+          margin-left: auto;
+          color: rgba(255,255,255,0.5);
+          font-size: 18px;
+          cursor: pointer;
+        }
+
 
         .container {
-          margin: 20px;
+          margin: 24px;
           border-radius: 20px;
-          background: linear-gradient(180deg,#071828,#041220);
+          background-image: url('/farmer.jpg');
+          background-size: cover;
+          background-position: 0% 0%;
+          background-repeat: no-repeat;
           border: 1px solid rgba(255,255,255,0.08);
-          padding: 24px;
+          padding: 24px 24px 35px 24px;
+          position: relative;
+          overflow: hidden;
+          min-height: 500px;
+          backdrop-filter: blur(2px);
+          background-color: #03111f;
+          background-clip: padding-box;
+          box-shadow: 0 0 0 1px rgba(255,255,255,0.05) inset;
+        }
+
+        .container::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: 20px;
+          background:
+            linear-gradient(
+              to right,
+              rgba(3,17,31,1) 0%,
+              rgba(3,17,31,0.95) 20%,
+              rgba(3,17,31,0.8) 38%,
+              rgba(3,17,31,0.5) 65%,
+              rgba(3,17,31,0.2) 80%,
+              rgba(3,17,31,0) 100%
+            ),
+            linear-gradient(
+              to top,
+              rgba(3,17,31,0.95) 0%,
+              rgba(3,17,31,0.85) 20%,
+              rgba(3,17,31,0.6) 31%,
+              rgba(3,17,31,0.3) 60%,
+              rgba(3,17,31,0) 80%
+            );
+          z-index: 1;
+        }
+
+        .container > * {
+          position: relative;
+          z-index: 2;
         }
 
         .header {
@@ -125,6 +201,22 @@ const Home = () => {
           opacity: 0.6;
         }
 
+        .header-actions {
+          display: flex;
+          align-items: center;
+          gap: 1px;
+        }
+        
+        .lang-btn {
+          background: transparent;
+          border: 1px solid rgba(255,255,255,0.2);
+          padding: 10px 16px;
+          border-radius: 10px;
+          color: white;
+          cursor: pointer;
+         
+        }
+
         .login {
           background: transparent;
           border: 1px solid rgba(255,255,255,0.2);
@@ -136,9 +228,45 @@ const Home = () => {
 
         .hero {
           display: grid;
-          grid-template-columns: 1.2fr 1fr;
-          margin-top: 30px;
-          gap: 30px;
+          grid-template-columns: minmax(0, 520px) 1.2fr;
+          align-items: center;
+          min-height: 580px;
+          position: relative;
+          overflow: hidden;
+          gap: 0;
+        }
+
+        .hero-left {
+          position: relative;
+          z-index: 2;
+          padding-right: 20px;
+          padding-top: 40px;
+        }
+
+        .hero-right {
+          position: relative;
+          overflow: hidden;
+          min-height: 580px;
+        }
+
+        .hero-bg-image {
+          position: absolute;
+          inset: 0;
+          background-size: cover;
+          /* Adjust second value (0% = top, 50% = center, 100% = bottom) to move image vertically */
+          background-position: 50% 0%;
+          z-index: 0;
+          filter: brightness(0.75);
+        }
+
+        .hero-bg-fade {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to right,
+            
+          );
+          z-index: 1;
         }
 
         .tag {
@@ -198,7 +326,7 @@ const Home = () => {
 
         .quote-card {
           position: absolute;
-          bottom: 550px;
+          bottom: 40px;
           right: 28px;
           background: rgba(0,0,0,0.55);
           backdrop-filter: blur(12px);
@@ -230,7 +358,7 @@ const Home = () => {
         .features-bar {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          margin: 0 28px;
+          margin: -10px 28px 0 2800x;
           background: rgba(255,255,255,0.04);
           border: 1px solid rgba(255,255,255,0.07);
           border-top: none;
@@ -241,7 +369,7 @@ const Home = () => {
           display: flex;
           align-items: center;
           gap: 14px;
-          padding: 18px 24px;
+          padding: 18px 20px;
           border-right: 1px solid rgba(255,255,255,0.07);
         }
         .feature-item:last-child { border-right: none; }
@@ -344,44 +472,66 @@ const Home = () => {
           body {
           background-color: #03111f !important;
         }
+
+        #root {
+          background: #03111f;
+          min-height: 100vh;
+        }
       `}</style>
 
-      <div className="page">
-
-        {/* NAV */}
+<div className="schemes-root">
+        {/* TOP NAV */}
         <div className="top-nav">
-          {schemes.map((s, i) => (
-            <div key={i} className={`nav-item ${i === 0 ? "active" : ""}`}>
-              {s}
-            </div>
-          ))}
+          <div className="top-nav-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            Top Schemes
+          </div>
+          <div className="top-nav-items">
+            {schemes.map((s, i) => (
+              <div className="top-nav-item" key={i}>
+                {i > 0 && <div className="top-nav-dot" />}
+                {s}
+              </div>
+            ))}
+          </div>
+          <div className="top-nav-arrow">›</div>
         </div>
-
         <div className="container">
 
           {/* HEADER */}
           <div className="header">
             <div>
               <div className="logo">Yojnex</div>
-              <div className="sub">Simplifying Government Schemes</div>
+              <div className="sub">{t.subtitle}</div>
             </div>
-             <button className="login">Login / Register</button>
+            <div className="header-actions">
+              <button
+                className="login"
+                onClick={() => setLang(lang === "en" ? "hi" : "en")}
+              >
+                {lang === "en" ? "हिंदी" : "English"}
+              </button>
+              <button className="login">Login / Register</button>
+            </div>
           </div>
+          
 
           {/* HERO */}
+      
           <div className="hero">
-            <div>
-              <p className="tag">🌿 Empowering Farmers • Enriching India</p>
+            <div className="hero-left">
+              <p className="tag">{t.tagline}</p>
 
               <h1>
-               Stop Searching.<br />Start <span>Getting Benefits</span> <br />
-               from the Right <span>Schemes</span>
+                {t.heroLine1}<br />
+                {t.heroLine2} <span>{t.heroHighlight1}</span> <br />
+                {t.heroLine3} <span>{t.heroHighlight2}</span>
               </h1>
 
-              <p className="desc">
-              Discover the most relevant schemes for you, understand eligibility,
-              and take action — all in one place.
-              </p>
+              <p className="desc">{t.description}</p>
 
               <div className="buttons">
               <button
@@ -397,40 +547,29 @@ const Home = () => {
                 disabled={loading}
                 style={{ opacity: loading ? 0.7 : 1}}
               >
-                {loading ? "Loading..." : "Check Scheme Eligibility"}
+                {loading ? t.loading : t.checkEligibility}
               </button>
           
               </div>
 
-              <p className="secure">🔒 100% Secure • Your data is safe</p>
+              <p className="secure">{t.secure}</p>
             </div>
 
-            <div className="quote-card">
-                  <div className="quote-icon">"</div>
-                  <div className="quote-text">Empowering farmers,<br />Enriching the nation.</div>
-                  <div className="quote-sub">– Together for a better tomorrow</div>
-                </div>
-        
-          </div>
-
-          {/* FEATURES */}
-          <div className="features-bar">
-          {features.map((f, i) => (
-            <div className="feature-item" key={i}>
-              <div className="feature-icon-wrap">{f.icon}</div>
-              <div>
-                <div className="feature-title">{f.title}</div>
-                <div className="feature-sub">{f.sub}</div>
+            <div className="hero-right">
+              <div className="quote-card">
+                <div className="quote-icon">"</div>
+                <div className="quote-text">{t.quoteText}</div>
+                <div className="quote-sub">{t.quoteSub}</div>
               </div>
             </div>
-          ))}
-        </div>
+        
+          </div>
 
           {/* POPULAR */}
           <div className="popular">
             <div className="pop-header">
-              <h2>Popular Schemes</h2>
-              <span>View All →</span>
+              <h2>{t.popularSchemes}</h2>
+              <span>{t.viewAll}</span>
             </div>
 
             <div className="grid">
@@ -438,8 +577,8 @@ const Home = () => {
                 <div className="card" key={i}>
                   <div>🌱</div>
                   <h3>{p.name}</h3>
-                  <p>Government support for farmers</p>
-                  <a className="apply-link" href={p.link} target="_blank" rel="noreferrer">Apply Now →</a>
+                  <p>{p.desc}</p>
+                  <a className="apply-link" href={p.link} target="_blank" rel="noreferrer">{t.applyNow}</a>
                   <div className="arrow">→</div>
                 </div>
               ))}

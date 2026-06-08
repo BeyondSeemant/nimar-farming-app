@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { schemes } from "../data/schemesData";
 
 const farmerImg = process.env.PUBLIC_URL + "/farmer.jpg";
-
 const Schemes = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -17,45 +17,6 @@ const Schemes = () => {
   const [checked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false);
   const isFormValid = form.land && form.income && form.category && form.state;
-
-  const schemes = [
-    {
-      name: "PM-KISAN",
-      rule: (f) => Number(f.land) <= 2 && Number(f.income) <= 200000,
-      desc: "₹6000/year direct income support",
-      reason: "Your land and income match PM-KISAN criteria",
-      link: "https://pmkisan.gov.in/",
-    },
-    {
-      name: "Kisan Credit Card",
-      rule: (f) => Number(f.land) > 0,
-      desc: "Loan up to ₹3 lakh at low interest",
-      reason: "You own agricultural land",
-      link: "https://www.nabard.org/",
-    },
-    {
-      name: "PM Fasal Bima Yojana",
-      rule: (f) => Number(f.land) > 0,
-      desc: "Crop insurance against natural disasters",
-      reason: "You are a farmer with land",
-      link: "https://pmfby.gov.in/",
-    },
-    {
-      name: "MP Krishi Anudan Yojana",
-      rule: (f) => f.state === "MP",
-      desc: "Subsidy on farming equipment in MP",
-      reason: "You selected Madhya Pradesh",
-      link: "https://dbt.mpdage.org/",
-    },
-    {
-      name: "SC/ST Farmer Subsidy",
-      rule: (f) => f.category === "SC/ST",
-      desc: "Extra subsidy benefits",
-      reason: "You belong to SC/ST category",
-      link: "https://agriculture.gov.in/",
-      
-    },
-  ];
 
   const checkEligibility = () => {
     const eligible = [];

@@ -86,7 +86,7 @@ const t = translations[lang];
           height: 52px;
           background: rgba(255,255,255,0.05);
           border-bottom: 1px solid rgba(255,255,255,0.07);
-          overflow: hidden;
+          overflow-x: auto;
         }
 
         .top-nav-label {
@@ -105,7 +105,7 @@ const t = translations[lang];
         .top-nav-items {
           display: flex;
           gap: 0;
-          overflow: hidden;
+          overflow-x: auto;
           flex: 1;
         }
         .top-nav-item {
@@ -264,7 +264,13 @@ const t = translations[lang];
           inset: 0;
           background: linear-gradient(
             to right,
-            
+            rgba(7, 24, 40, 1) 0%,
+            rgba(7, 24, 40, 0.90) 20%,
+            rgba(7, 24, 40, 0.75) 35%,
+            rgba(7, 24, 40, 0.55) 45%,
+            rgba(7, 24, 40, 0.35) 55%,
+            rgba(7, 24, 40, 0.15) 65%,
+            rgba(0,0,0,0) 80%
           );
           z-index: 1;
         }
@@ -358,7 +364,7 @@ const t = translations[lang];
         .features-bar {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          margin: -10px 28px 0 2800x;
+          margin: -10px 28px 0 28px;
           background: rgba(255,255,255,0.04);
           border: 1px solid rgba(255,255,255,0.07);
           border-top: none;
@@ -466,9 +472,7 @@ const t = translations[lang];
             grid-template-columns: 1fr 1fr;
           }
         }
-          * {
-          max-width: 100%;
-           }
+        /* (Removed global * { max-width: 100%; } as it can break layout) */
           body {
           background-color: #03111f !important;
         }
@@ -476,6 +480,64 @@ const t = translations[lang];
         #root {
           background: #03111f;
           min-height: 100vh;
+        }
+        @media (max-width: 768px) {
+          .container {
+            margin: 12px;
+            padding: 16px;
+          }
+
+          .header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+          }
+
+          .hero {
+            grid-template-columns: 1fr;
+            min-height: auto;
+          }
+
+          .hero-left {
+            padding-right: 0;
+            padding-top: 20px;
+          }
+
+          h1 {
+            font-size: 26px;
+            line-height: 1.3;
+          }
+
+          .buttons {
+            flex-direction: column;
+            width: 100%;
+          }
+
+          .primary, .secondary {
+            width: 100%;
+            text-align: center;
+          }
+
+          .quote-card {
+            position: relative;
+            bottom: auto;
+            right: auto;
+            margin-top: 20px;
+            max-width: 100%;
+          }
+
+          .grid {
+            grid-template-columns: 1fr;
+          }
+
+          .top-nav {
+            padding: 0 12px;
+          }
+
+          .top-nav-item {
+            padding: 0 10px;
+            font-size: 12px;
+          }
         }
       `}</style>
 
